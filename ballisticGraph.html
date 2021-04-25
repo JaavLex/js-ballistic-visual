@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<form action="/action_page.php">
+  <label for="caliber">Choose a caliber:</label>
+  <select id="caliber_combo" name="caliber">
+    <option value=961>5.56x45 NATO</option>
+    <option value=360>9mm Parabellum</option>
+    <option value=850>7.62x51 NATO</option>
+    <option value=730>7.62x39 RUS</option>
+  </select>
+  <label for="angle">Choose a shooting angle:</label>
+  <input type="number" id="angle_slider" name="angle" min="1" value="20" max="359">
+  <input type="button" id="change_values" value="Change value">
+</form>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript">
+
+function load(linePrecision) {
+ var ffs = [];
+
+  function calculateTrajectory(x, velocity, angle) {
+    return (-0.5 * 9.81 * (Math.pow(x, 2)) / (Math.pow(velocity, 2)) * (1 + Math.pow(Math.tan(angle * Math.PI / 180), 2))) + (x * Math.tan(angle * Math.PI / 180));
+  }
+
+  function calculateZero(velocity, angle) {
+    return (Math.tan(angle * Math.PI / 180) * Math.pow(velocity, 2)) / (0.5 * 9.81 * (1 + Math.pow(Math.tan(angle * Math.PI / 180), 2)));  
+  }
+
+  var angle = document.getElementById("angle_slider").value;
+  var velocity = document.getElementById("caliber_combo").value;
+  var zero = calculateZero(velocity, angle);
+
+  for (var i = 0; i <= zero; i += linePrecision) {
+    ffs.push({x: i, y: calculateTrajectory(i, velocity, angle) + 1.80});
+  }
+
+	var chart = new CanvasJS.Chart("chartContainer", {
+		title:{
+			text: "Simple Ballistic simulator by Alex"              
+		},
+    axisY:{
+      minimum: 0,
+      maximum: zero
+     },
+		data: [              
+		{
+			type: "line",
+			dataPoints: ffs
+		}
+		]
+	});
+	chart.render();
+}
+
+window.onload = function () {load(100)};
+document.getElementById("change_values").onclick = function () {load(100)};
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+</body>
+</html>
