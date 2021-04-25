@@ -9,7 +9,7 @@
     <option value=850>7.62x51 NATO</option>
     <option value=730>7.62x39 RUS</option>
   </select>
-  <label for="angle">Choose a shooting angle:</label>
+  <label for="angle">Choose a shooting angle (max: 89 degrees, min: 1 degree):</label>
   <input type="number" id="angle_slider" name="angle" min="1" value="20" max="359">
   <input type="button" id="change_values" value="Change value">
 </form>
@@ -28,7 +28,14 @@ function load(linePrecision) {
   }
 
   var angle = document.getElementById("angle_slider").value;
-  var velocity = document.getElementById("caliber_combo").value;
+  var velocity;
+
+  if (document.getElementById("caliber_combo").value <= 89 || document.getElementById("caliber_combo").value >= 1) {
+    velocity = document.getElementById("caliber_combo").value;
+  } else {
+    alert("Wrong input! MAX: 89 | MIN: 1");
+  }
+
   var zero = calculateZero(velocity, angle);
 
   for (var i = 0; i <= zero; i += linePrecision) {
@@ -59,5 +66,7 @@ document.getElementById("change_values").onclick = function () {load(100)};
 </head>
 <body>
 <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<h2>Ballistic formula used in the graph :</h2>
+<img src="formula-ballistic.png" height="50px"/>
 </body>
 </html>
