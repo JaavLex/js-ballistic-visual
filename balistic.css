@@ -1,0 +1,18 @@
+body {
+    font-family: monospace;
+}
+
+.parameters {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: rgba(128, 128, 128, 0.63);
+}
+
+.graph {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    border-style: solid;
+    border-width: 2px;
+}
